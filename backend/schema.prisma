@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Store {
+  id String @id @default(uuid())
+  name String
+  description String?
+  type String
+  users User[]
+  street1 String? @db.VarChar(32)
+  street2 String? @db.VarChar(32)
+  city String? @db.VarChar(32)
+  zip String? @db.VarChar(6)
+}
+
+model User {
+    id String @id @default(uuid())
+    username String @unique
+    password String
+    firstname String
+    lastname String
+    createdAt DateTime 
+    updatedAt DateTime @default(now())
+    authGroup AuthGroup?
+    store Store @relation(fields: [storeId], references: [id])
+    storeId String @unique
+}
+
+model AuthGroup {
+    id String @id @default(uuid())
+    name String @unique
+    createdAt DateTime 
+    updatedAt DateTime @default(now())
+    authorities Authority[]
+    user User @relation(fields: [userId], references: [id])
+    userId String @unique
+}
+
+model Authority {
+    id String @id @default(uuid())
+    name String @unique
+    authGroups AuthGroup[]
+}
+

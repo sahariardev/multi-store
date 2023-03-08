@@ -1,0 +1,1 @@
+INSERT INTO Store (name, type) VALUES(`System`, 'SYSTEM');

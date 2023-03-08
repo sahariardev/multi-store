@@ -1,0 +1,36 @@
+{
+  "name": "feature-manager-backend",
+  "version": "1.0.0",
+  "description": "Feature manager application backend",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "nodemon ./src/app.ts",
+    "start": "node ./dist/app.js"
+  },
+  "keywords": [
+    "Feature",
+    "Manager"
+  ],
+  "author": "Sahariar Alam Khandoker Rifat",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^4.11.0",
+    "@types/express-validator": "^3.0.0",
+    "bcrypt": "^5.1.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-validator": "^6.15.0",
+    "jsonwebtoken": "^9.0.0",
+    "prisma": "^4.11.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/express": "^4.17.17",
+    "@types/jsonwebtoken": "^9.0.1",
+    "@types/node": "^18.14.1",
+    "nodemon": "^2.0.20",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
+  }
+}
