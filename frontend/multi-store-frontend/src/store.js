@@ -1,8 +1,8 @@
-import { configureStore} from '@reduxjs/toolkit';
-import {myStoreSlice} from './view/store/myStoreSlice'
+import {configureStore} from '@reduxjs/toolkit';
+import myStore from './view/store/myStoreSlice'
 
 const store = configureStore({
-    reducer: {myStoreSlice}
+    reducer: {myStore,}
 });
 
 export default store;

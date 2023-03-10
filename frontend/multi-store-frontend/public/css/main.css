@@ -1,0 +1,12 @@
+.row {
+    margin-left: 0;
+    margin-top: 10px;
+}
+
+.nav-link {
+    cursor: pointer;
+}
+
+.form-error-message {
+    color: red;
+}

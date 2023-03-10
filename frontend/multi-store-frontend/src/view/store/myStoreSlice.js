@@ -1,16 +1,16 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {createSlice} from "@reduxjs/toolkit";
 
 export const myStoreSlice = createSlice({
-    name:"myStore",
-    initialState:{
-        value:null
+    name: "myStore",
+    initialState: {
+        value: 'Dashboard'
     },
     reducers: {
-        adopt : (state,action) =>{
+        updatePagerHeader: (state, action) => {
             state.value = action.payload
         }
     }
 });
 
-export const {adopt} = myStoreSlice.actions;
+export const {updatePagerHeader} = myStoreSlice.actions;
 export default myStoreSlice.reducer;
