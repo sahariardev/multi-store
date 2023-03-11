@@ -27,7 +27,7 @@ const Navbar = () => {
                     </li>
 
                     <li className="nav-item">
-                        <div  className={pageHeader === 'Store' ? 'nav-link active' : 'nav-link'} onClick={()=>{navigateTo('Store','myStore')}}><i className="fa fa-inbox"/>Store</div>
+                        <div  className={pageHeader === 'Store' ? 'nav-link active' : 'nav-link'} onClick={()=>{navigateTo('Store','myStoreList')}}><i className="fa fa-inbox"/>Store</div>
                     </li>
                 </ul>
             </div>

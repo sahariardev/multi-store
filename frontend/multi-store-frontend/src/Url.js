@@ -1,5 +1,6 @@
 const Url = {
-    storeCreate: 'store/create'
+    storeCreate: 'store/create',
+    storeList:'store/list'
 };
 
 export default Url;

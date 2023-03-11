@@ -1,7 +1,19 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import Url, {getUrl} from './../../Url';
+import DisabledBtn from "../../DisabledBtn";
+import { useNavigate } from "react-router-dom";
+
+import {useDispatch} from "react-redux";
+import {updatePagerHeader} from './myStoreSlice';
+import {updateDonePageContent} from '../done/donePageSlice';
 
 const MyStore = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    useEffect(() => {
+        dispatch(updatePagerHeader('Store'));
+    });
+
     const [storeName, setStoreName] = useState();
     const [street1, setStreet1] = useState();
     const [street2, setStreet2] = useState();
@@ -12,6 +24,7 @@ const MyStore = () => {
 
     //errors
     const [nameError, setNameError] = useState();
+    const [loader, setLoader] = useState(false);
 
     const submitForm = async () => {
         const data = {
@@ -32,7 +45,7 @@ const MyStore = () => {
             errorSetters[errorSetterKey]('');
         });
 
-        //todo:: loader
+        setLoader(true);
         await fetch(getUrl(Url.storeCreate), {
             method: 'POST',
             headers: new Headers({'content-type': 'application/json'}),
@@ -47,6 +60,7 @@ const MyStore = () => {
             return {data: response.json(), status: response.status};
         }).then(({data, status}) => {
             data.then(res => {
+                setLoader(false);
                 if (status === 412) {
                     res.forEach(error => {
                         let errorSetter = errorSetters[error.fieldName];
@@ -55,10 +69,12 @@ const MyStore = () => {
                         }
                     });
                 } else if (status === 200) {
-
+                    dispatch(updateDonePageContent({message:`Store created with id : ${res.id}`}));
+                    navigate('/done');
                 }
             })
         }).catch((errors) => {
+            setLoader(false);
         });
     }
 
@@ -70,7 +86,7 @@ const MyStore = () => {
                         <label htmlFor="storeName" className="col-sm-3">Store Name</label>
                         <div className="col-sm-5">
                             <input type="text" id="storeName" className="form-control"
-                                   onChange={(e) => setStoreName(e.target.value)} value={storeName}/>
+                                   onChange={(e) => setStoreName(e.target.value)} value={storeName} />
                         </div>
                         {nameError && (<div className="col-sm-5 form-error-message">{nameError}</div>)}
                     </div>
@@ -120,11 +136,21 @@ const MyStore = () => {
                         </div>
                     </div>
 
-                    <div className="row">
-                        <div className="col-sm-3">
-                            <div className="btn btn-primary btn-block" onClick={() => submitForm()}>Submit</div>
+                    {!loader && (<div className="row footer-btn-container">
+                        <div className="col-sm-2">
+                            <div className="btn btn-primary btn-block" onClick={() => navigate('/myStoreList')}>
+                                Back
+                            </div>
                         </div>
-                    </div>
+                        <div className="col-sm-2">
+                            <div className="btn btn-primary btn-block" onClick={() => submitForm()}>
+                                  Submit
+                            </div>
+                        </div>
+                    </div>)}
+
+                    {loader && (<div className="row footer-btn-container"><DisabledBtn/></div>)}
+
                 </form>
             </div>
         </div>
