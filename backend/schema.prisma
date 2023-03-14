@@ -30,6 +30,9 @@ model User {
     authGroup AuthGroup?
     store Store @relation(fields: [storeId], references: [id])
     storeId String @unique
+    superAdmin Boolean
+    storeAdmin Boolean
+    passwordReset Boolean
 }
 
 model AuthGroup {

@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 
 import storeRouter from './controller/store_controller'
+import loginRouter from "./controller/login_controller";
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.get('/', (req: Request, res:Response) => {
 });
 
 app.use('/store', storeRouter);
+app.use('/login', loginRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on ${port}`);
