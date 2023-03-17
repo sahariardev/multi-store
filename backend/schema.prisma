@@ -29,10 +29,11 @@ model User {
     updatedAt DateTime @default(now())
     authGroup AuthGroup?
     store Store @relation(fields: [storeId], references: [id])
-    storeId String @unique
+    storeId String
     superAdmin Boolean
     storeAdmin Boolean
     passwordReset Boolean
+    authorities   Authority[]
 }
 
 model AuthGroup {
@@ -49,5 +50,6 @@ model Authority {
     id String @id @default(uuid())
     name String @unique
     authGroups AuthGroup[]
+    users User[]
 }
 

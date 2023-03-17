@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response, Router} from 'express';
-import ValidationError from '../dto/validation_error';
-import {isValidStoreType} from '../dto/store_type';
-import prisma from "../service/db";
+import ValidationError from '../../dto/validation_error';
+import {isValidStoreType} from '../../dto/store_type';
+import prisma from "../../service/db";
 
 const storeRouter: Router = Router();
 
