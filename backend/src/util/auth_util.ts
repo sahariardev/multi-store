@@ -20,7 +20,8 @@ export const createJwt = (user: any) => {
             lastname: user.lastname,
             superAdmin: user.superAdmin,
             storeAdmin: user.storeAdmin,
-            passwordReset: user.passwordReset
+            passwordReset: user.passwordReset,
+            roles: user.authorities
         },
         // @ts-ignore
         process.env.JWT_SECRET);
@@ -29,7 +30,6 @@ export const createJwt = (user: any) => {
 export const protect = (ignorePassReset: boolean = false) => {
     return async (req: any, res: any, next: any) => {
         const bearer = req.header('authorization');
-
 
         if (!bearer) {
             res.status(401);
@@ -86,8 +86,7 @@ export const protect = (ignorePassReset: boolean = false) => {
     }
 }
 export const hasRole = (req: Request, role: string) => {
-    const authorities = req.body.authorities;
-
+    const authorities = req.body.user.authorities;
     authorities.forEach((auth: any) => {
         if (auth.name == role) {
             return true;

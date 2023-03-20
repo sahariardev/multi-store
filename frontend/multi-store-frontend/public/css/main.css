@@ -76,3 +76,6 @@
     margin: auto;
 }
 
+body {
+    font-family: (--font-family);
+}

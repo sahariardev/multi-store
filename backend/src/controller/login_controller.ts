@@ -8,12 +8,18 @@ loginRouter.post('/', async (req: Request, res: Response) => {
     const user = await prisma.user.findFirst({
         where: {
             username: req.body.username
-        }
+        },
+        include: {authorities: true}
     });
+
+    console.log(user);
 
     if (!user) {
         res.status(401);
-        res.json({message: "UserName/Password Invalid!"});
+        res.json([{
+            fieldName : 'message',
+            message:'Username/Password Invalid!'
+        }]);
         return;
     }
 
@@ -21,17 +27,15 @@ loginRouter.post('/', async (req: Request, res: Response) => {
 
     if (!isValid) {
         res.status(401);
-        res.json({message: "UserName/Password Invalid!"});
+        res.json([{
+            fieldName : 'message',
+            message:'Username/Password Invalid!'
+        }]);
         return;
     }
 
     let token = createJwt(user);
     res.json({token});
 });
-
-//regularUserCreate
-//AuthGroupCreate
-//AuthgroupAssign
-
 
 export default loginRouter;

@@ -1,10 +1,12 @@
-import DataTable from 'react-data-table-component';
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {updatePagerHeader} from "../store/myStoreSlice";
-import {dataTableStyles, getRequest} from "../../Util";
+import {getRequest} from "../../Util";
 import Url from "../../Url";
+
+import {SplitButton} from 'primereact/splitbutton';
+import CustomDataTable from "../components/CustomDataTable";
 
 const UserList = () => {
     const dispatch = useDispatch();
@@ -13,58 +15,20 @@ const UserList = () => {
         dispatch(updatePagerHeader('Users'));
     });
 
-    const columns = [
+    const btnItems = [
         {
-            width: '56px', // custom width for icon button
-            style: {
-                borderBottom: '1px solid #FFFFFF',
-                marginBottom: '-1px',
-            },
-        },
-        {
-            name: 'User Id',
-            selector: row => row.id,
-            sortable: true,
-            grow: 2,
-            style: {
-                color: '#202124',
-                fontSize: '14px',
-                fontWeight: 500,
-            },
-        },
-        {
-            name: 'Username',
-            selector: row => row.username,
-            sortable: true,
-            grow: 2,
-            style: {
-                color: '#202124',
-                fontSize: '14px',
-                fontWeight: 500,
-            },
-        },
-        {
-            name: 'First name',
-            selector: row => row.firstname,
-            sortable: true,
-            style: {
-                color: 'rgba(0,0,0,.54)',
-            },
-        },
-        {
-            name: 'Last Name',
-            selector: row => row.lastname,
-            sortable: true,
-            style: {
-                color: 'rgba(0,0,0,.54)',
-            },
-        },
-        {
-            allowOverflow: true,
-            button: true,
-            width: '56px',
-        },
+            label: 'Lock',
+            icon: 'pi pi-times',
+            command: () => {
+
+            }
+        }
     ];
+
+    const updateRole = () => {
+
+    };
+
 
     const [userList, setUserList] = useState([]);
 
@@ -76,16 +40,37 @@ const UserList = () => {
         fetchData()
     }, []);
 
+    const actionTemplate = (rowData) => {
+        return <SplitButton label="Update Role" onClick={updateRole} model={btnItems} outlined/>;
+    };
+
+    const columns = [
+        {
+            field: 'id',
+            header: 'User ID'
+        },
+        {
+            field: 'username',
+            header: 'User Name'
+        },
+        {
+            field: 'firstname',
+            header: 'First Name'
+        },
+        {
+            field: 'lastname',
+            header: 'Last name'
+        },
+        {
+            body: actionTemplate,
+            header: 'Action',
+            type: 'button'
+        },
+    ];
+
     return (
         <div className="container">
-            <DataTable
-                title=""
-                columns={columns}
-                data={userList}
-                customStyles={dataTableStyles}
-                highlightOnHover
-                pointerOnHover
-            />
+            <CustomDataTable data={userList} columns={columns}/>
         </div>
     );
 }
