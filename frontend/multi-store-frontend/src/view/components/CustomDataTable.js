@@ -6,7 +6,6 @@ import {InputText} from "primereact/inputtext";
 import {Button} from "primereact/button";
 
 const CustomDataTable = (props) => {
-    console.log(props);
     const dt = useRef(null);
     const exportCSV = (selectionOnly) => {
         dt.current.exportCSV({selectionOnly});

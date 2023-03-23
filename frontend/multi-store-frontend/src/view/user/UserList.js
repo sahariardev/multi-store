@@ -2,6 +2,7 @@ import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {updatePagerHeader} from "../store/myStoreSlice";
+import {updateLoader} from "../store/commonSlice";
 import {getRequest} from "../../Util";
 import Url from "../../Url";
 
@@ -25,23 +26,25 @@ const UserList = () => {
         }
     ];
 
-    const updateRole = () => {
-
+    const updateRole = (rowData) => {
+        navigate('/userRoleView/'+rowData.id);
     };
-
 
     const [userList, setUserList] = useState([]);
 
     useEffect(() => {
+        dispatch(updateLoader(true));
         const fetchData = async () => {
             const data = await getRequest(Url.userList);
             setUserList(data);
+            dispatch(updateLoader(false));
         };
-        fetchData()
+        fetchData();
+
     }, []);
 
     const actionTemplate = (rowData) => {
-        return <SplitButton label="Update Role" onClick={updateRole} model={btnItems} outlined/>;
+        return <SplitButton label="Update Role" onClick={() => updateRole(rowData)} model={btnItems} outlined/>;
     };
 
     const columns = [

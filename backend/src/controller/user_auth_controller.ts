@@ -23,13 +23,6 @@ userAuth.post('/', async (req: Request, res: Response) => {
     }
 
     const userId = req.body.userId;
-    const roles: any = [];
-
-    for (let id in req.body.roles) {
-        roles.push({
-            id: req.body.roles[id]
-        });
-    }
 
     const user = await prisma.user.findFirst({
         where: {
@@ -38,14 +31,35 @@ userAuth.post('/', async (req: Request, res: Response) => {
                 in: req.body.accessibleStores.map((store: any) => {
                     return store.id
                 })
-            }
-        }
+            },
+        },
+        include: {authorities: true}
     });
 
     if (!user) {
         res.status(401);
         res.json('Invalid action');
         return;
+    }
+
+    const existingUserRoles: string[] = user.authorities.map(role => role.id);
+    const newAddedRoles = req.body.roles.filter((role: any) => !existingUserRoles.includes(role));
+    const removedRoles = existingUserRoles.filter((role) => !req.body.roles.includes(role));
+
+    const rolesToBeAdded: any = [];
+
+    for (let id in newAddedRoles) {
+        rolesToBeAdded.push({
+            id: newAddedRoles[id]
+        });
+    }
+
+    const rolesToBeDeleted: any = [];
+
+    for (let id in removedRoles) {
+        rolesToBeDeleted.push({
+            id: removedRoles[id]
+        });
     }
 
     const updateUser = await prisma.user.update(
@@ -55,9 +69,11 @@ userAuth.post('/', async (req: Request, res: Response) => {
             },
             data: {
                 authorities: {
-                    connect: roles
+                    connect: rolesToBeAdded,
+                    disconnect: rolesToBeDeleted
                 }
-            }
+            },
+            include: {authorities: true}
         }
     );
 

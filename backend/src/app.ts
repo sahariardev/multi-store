@@ -27,7 +27,7 @@ app.use('/store', protect(), storeRouter);
 app.use('/user', protect(), userRouter);
 app.use('/login', loginRouter);
 app.use('/changePassword', protect(true), passwordChangeRouter);
-app.use('/roleAssign',  userAuth);
+app.use('/roleAssign', protect(), userAuth);
 
 app.listen(port, () => {
     console.log(`Server is running on ${port}`);

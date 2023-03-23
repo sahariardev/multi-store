@@ -2,7 +2,9 @@ const Url = {
     storeCreate: 'store/create',
     storeList:'store/list',
     login:'login',
-    userList:'user/listAllUser'
+    userList:'user/listAllUser',
+    userDetail:'user/detail',
+    roleAssign:'roleAssign',
 };
 
 export default Url;

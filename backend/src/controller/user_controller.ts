@@ -163,8 +163,14 @@ userRouter.get('/detail/:id', async (req: Request, res: Response) => {
                     return store.id
                 })
             }
-        }
+        },
+        include : {authorities: true, store:true}
     });
+
+    if (user) {
+        user.password = '';
+    }
+
     res.json(user);
 });
 

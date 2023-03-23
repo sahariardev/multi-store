@@ -13,15 +13,16 @@ import LoginView from "./Login";
 import UserList from "./view/user/UserList";
 //theme
 import "primereact/resources/themes/lara-light-indigo/theme.css";
-
+import { ProgressSpinner } from 'primereact/progressspinner';
 //core
 import "primereact/resources/primereact.min.css";
 
 //icons
 import "primeicons/primeicons.css";
+import RoleView from "./view/user/RoleView";
+import LoaderComponent from "./view/store/LoaderComponent";
 
 function App() {
-
     const [showLoginForm, setShowLoginForm] = useState(true);
 
     useEffect(() => {
@@ -37,6 +38,7 @@ function App() {
             {!showLoginForm &&<BrowserRouter>
             <Provider store={store}>
                 <section id="admin">
+                    <LoaderComponent/>
                     <Navbar/>
                     <div className="content">
                         <Header/>
@@ -48,6 +50,7 @@ function App() {
                                     <Route path='/mystoreList' element={<MyStoreList/>}/>
                                     <Route path='/done' element={<DoneView/>}/>
                                     <Route path='/userList' element={<UserList/>}/>
+                                    <Route path='/userRoleView/:id' element={<RoleView/>}/>
                                 </Route>
                             </Routes>
                         </div>
