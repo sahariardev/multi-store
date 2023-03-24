@@ -21,6 +21,7 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import RoleView from "./view/user/RoleView";
 import LoaderComponent from "./view/store/LoaderComponent";
+import UserForm from "./view/user/UserForm";
 
 function App() {
     const [showLoginForm, setShowLoginForm] = useState(true);
@@ -50,6 +51,7 @@ function App() {
                                     <Route path='/mystoreList' element={<MyStoreList/>}/>
                                     <Route path='/done' element={<DoneView/>}/>
                                     <Route path='/userList' element={<UserList/>}/>
+                                    <Route path='/userForm' element={<UserForm/>}/>
                                     <Route path='/userRoleView/:id' element={<RoleView/>}/>
                                 </Route>
                             </Routes>

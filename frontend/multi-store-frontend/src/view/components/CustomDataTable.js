@@ -23,8 +23,9 @@ const CustomDataTable = (props) => {
                     <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Keyword Search"/>
                 </span>
 
-                <Button type="button" icon="pi pi-file" style={{float: 'right'}} rounded
+                <Button type="button" icon="pi pi-file" style={{marginLeft: '10px'}} rounded
                         onClick={() => exportCSV(false)} data-pr-tooltip="CSV"/>
+                {props.renderAddNewBtn && props.renderAddNewBtn()}
             </div>
         );
     };

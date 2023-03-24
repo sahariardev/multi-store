@@ -3,11 +3,12 @@ import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {updatePagerHeader} from "../store/myStoreSlice";
 import {updateLoader} from "../store/commonSlice";
-import {getRequest} from "../../Util";
+import {getLoggedInUserInfo, getRequest} from "../../Util";
 import Url from "../../Url";
 
 import {SplitButton} from 'primereact/splitbutton';
 import CustomDataTable from "../components/CustomDataTable";
+import {Button} from "primereact/button";
 
 const UserList = () => {
     const dispatch = useDispatch();
@@ -27,7 +28,7 @@ const UserList = () => {
     ];
 
     const updateRole = (rowData) => {
-        navigate('/userRoleView/'+rowData.id);
+        navigate('/userRoleView/' + rowData.id);
     };
 
     const [userList, setUserList] = useState([]);
@@ -71,9 +72,23 @@ const UserList = () => {
         },
     ];
 
+    const renderAddNewBtn = () => {
+        const user = getLoggedInUserInfo();
+
+        if (!user.storeAdmin) {
+            return '';
+        }
+
+        return (
+            <Button type="button" icon="pi pi-plus" style={{marginLeft: '10px'}} rounded
+                    onClick={() => { navigate('/userForm');
+                    }} data-pr-tooltip="Add new user"/>
+        );
+    }
+
     return (
         <div className="container">
-            <CustomDataTable data={userList} columns={columns}/>
+            <CustomDataTable data={userList} columns={columns} renderAddNewBtn={renderAddNewBtn}/>
         </div>
     );
 }

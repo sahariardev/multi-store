@@ -93,9 +93,9 @@ userRouter.post('/createAdmin', dataMapper(mapper), validator(validation), async
 userRouter.post('/createUser', dataMapper(mapper), validator(validation), async (req: Request, res: Response) => {
     const body = req.body;
 
-    const allowedStores = req.body.accessibleStores.filter((store: any) => store.id == body.store.id);
+    const allowedStores = req.body.accessibleStores.filter((store: any) => store.id == body.storeId);
 
-    if (!allowedStores || !body.user.superAdmin) {
+    if (!allowedStores || !body.user.storeAdmin) {
         res.status(401);
         res.json('Invalid action');
         return;

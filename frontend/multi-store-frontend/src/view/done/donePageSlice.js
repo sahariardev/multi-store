@@ -3,12 +3,16 @@ import {createSlice} from "@reduxjs/toolkit";
 export const donePageSlice = createSlice(
     {
         name: "donePage",
-        initialState:{
-            message:'Welcome to done page'
+        initialState: {
+            message: 'Welcome to done page',
+            backBtnUrl: '/'
         },
-        reducers : {
-            updateDonePageContent : (state, ation) => {
+        reducers: {
+            updateDonePageContent: (state, ation) => {
                 state.message = ation.payload.message
+                if(ation.payload.backBtnUrl) {
+                    state.backBtnUrl = ation.payload.backBtnUrl
+                }
             }
         }
     }

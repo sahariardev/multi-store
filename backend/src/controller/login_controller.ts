@@ -12,8 +12,6 @@ loginRouter.post('/', async (req: Request, res: Response) => {
         include: {authorities: true}
     });
 
-    console.log(user);
-
     if (!user) {
         res.status(401);
         res.json([{

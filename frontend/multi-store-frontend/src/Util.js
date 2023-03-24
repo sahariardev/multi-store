@@ -87,7 +87,6 @@ export const postRequest = async (url, data, errorSetters, preProcessor, postPro
     }).then(async ({data, status}) => {
         return await data.then(res => {
             postProcessor && postProcessor(res);
-            console.log(res);
             if (status === 412 || status === 401) {
                 res.forEach(error => {
                     let errorSetter = errorSetters[error.fieldName];
@@ -95,13 +94,15 @@ export const postRequest = async (url, data, errorSetters, preProcessor, postPro
                         errorSetter(error.message);
                     }
                 });
-                return {};
+                return {
+                    errorStatus : status
+                };
             } else if (status === 200) {
                 return res;
             }
         });
     }).catch((errors) => {
         console.log(errors);
-        postProcessor();
+        postProcessor && postProcessor();
     });
 }

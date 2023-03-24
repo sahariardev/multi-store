@@ -1,9 +1,8 @@
-import {Link} from "react-router-dom";
-import {useDispatch} from "react-redux";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
 import {updatePagerHeader} from './view/store/myStoreSlice'
-import {useSelector} from "react-redux";
 import {getLoggedInUserInfo, hasRole} from "./Util";
+
 const Navbar = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -17,7 +16,7 @@ const Navbar = () => {
     const user = getLoggedInUserInfo();
 
     const getStoreLink = () => {
-        if(!user.superAdmin) {
+        if (!user.superAdmin) {
             return '';
         }
 
@@ -32,7 +31,7 @@ const Navbar = () => {
     }
 
     const getUserListLink = () => {
-        if(!user.storeAdmin && !hasRole('ROLE_ASSIGN')) {
+        if (!user.storeAdmin && !hasRole('ROLE_ASSIGN')) {
             return '';
         }
 
@@ -56,7 +55,10 @@ const Navbar = () => {
             <div id="list">
                 <ul className="nav flex-column">
                     <li className="nav-item">
-                        <div className={pageHeader === 'Dashboard' ? 'nav-link active' : 'nav-link'} onClick={()=>{navigateTo('Dashboard','/')}}><i className="fa fa-adjust"/>Dashboard</div>
+                        <div className={pageHeader === 'Dashboard' ? 'nav-link active' : 'nav-link'} onClick={() => {
+                            navigateTo('Dashboard', '/')
+                        }}><i className="fa fa-adjust"/>Dashboard
+                        </div>
                     </li>
 
                     {getStoreLink()}
