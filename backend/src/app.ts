@@ -10,6 +10,7 @@ import passwordChangeRouter from "./controller/password_reset_controller";
 import userRouter from "./controller/user_controller";
 import userAuth from "./controller/user_auth_controller";
 import resourceRouter from "./controller/resource_controller";
+import attendanceRouter from "./controller/attendance_controller";
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.use('/login', loginRouter);
 app.use('/changePassword', protect(true), passwordChangeRouter);
 app.use('/roleAssign', protect(), userAuth);
 app.use('/resource', protect(), resourceRouter);
+app.use('/attendances', protect(), attendanceRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on ${port}`);

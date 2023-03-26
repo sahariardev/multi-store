@@ -17,6 +17,7 @@ model Store {
   street2 String? @db.VarChar(32)
   city String? @db.VarChar(32)
   zip String? @db.VarChar(6)
+  locked Boolean @default(false)
 }
 
 model User {
@@ -33,7 +34,12 @@ model User {
     superAdmin Boolean
     storeAdmin Boolean
     passwordReset Boolean
+    locked Boolean @default(false)
     authorities   Authority[]
+    userAttendences Attendacne[] @relation(name:"forUser")
+    addedAttendences Attendacne[] @relation(name:"addedBy")
+    approvedAttendences Attendacne[] @relation(name:"approvedBy")
+    deletedAttendences Attendacne[] @relation(name:"deletedBy")
 }
 
 model AuthGroup {
@@ -51,5 +57,22 @@ model Authority {
     name String @unique
     authGroups AuthGroup[]
     users User[]
+}
+
+model Attendacne {
+    id String @id @default(uuid())
+    user User @relation(name:"forUser", fields: [userId], references: [id])
+    userId String
+    addedBy User @relation(name:"addedBy", fields: [addedById], references: [id])
+    addedById String
+    approvedBy User? @relation(name:"approvedBy", fields: [approvedById], references: [id])
+    approvedById String?
+    attendanceDate DateTime
+    createdAt DateTime
+    updatedAt DateTime @default(now())
+    type String @db.VarChar(32)
+    deleted Boolean @default(false)
+    deletedBy User? @relation(name:"deletedBy", fields: [deletedById], references: [id])
+    deletedById String?
 }
 
