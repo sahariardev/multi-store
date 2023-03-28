@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {updatePagerHeader} from "../store/myStoreSlice";
 import {updateLoader} from "../store/commonSlice";
-import {getLoggedInUserInfo, getRequest} from "../../Util";
+import {getLoggedInUserInfo, getRequest, hasRole} from "../../Util";
 import Url from "../../Url";
 
 import {SplitButton} from 'primereact/splitbutton';
@@ -17,15 +17,33 @@ const UserList = () => {
         dispatch(updatePagerHeader('Users'));
     });
 
-    const btnItems = [
-        {
-            label: 'Lock',
-            icon: 'pi pi-times',
-            command: () => {
+    const user = getLoggedInUserInfo();
 
+    const btnItemsRenderer = (rowData) => {
+        const btnItems = [
+            {
+                label: 'Lock',
+                icon: 'pi pi-times',
+                command: () => {
+
+                }
             }
+        ];
+
+        if (hasRole('ATTENDANCE') || user.storeAdmin) {
+            btnItems.push(
+                {
+                    label: 'Attendance',
+                    icon: 'pi pi-calendar-plus',
+                    command: () => {
+                        navigate('/attendance/' + rowData.id);
+                    }
+                }
+            );
         }
-    ];
+
+        return btnItems;
+    }
 
     const updateRole = (rowData) => {
         navigate('/userRoleView/' + rowData.id);
@@ -45,7 +63,7 @@ const UserList = () => {
     }, []);
 
     const actionTemplate = (rowData) => {
-        return <SplitButton label="Update Role" onClick={() => updateRole(rowData)} model={btnItems} outlined/>;
+        return <SplitButton label="Update Role" onClick={() => updateRole(rowData)} model={btnItemsRenderer(rowData)} outlined/>;
     };
 
     const columns = [
@@ -73,8 +91,6 @@ const UserList = () => {
     ];
 
     const renderAddNewBtn = () => {
-        const user = getLoggedInUserInfo();
-
         if (!user.storeAdmin) {
             return '';
         }
@@ -88,7 +104,7 @@ const UserList = () => {
 
     return (
         <div className="container">
-            <CustomDataTable data={userList} columns={columns} renderAddNewBtn={renderAddNewBtn}/>
+            <CustomDataTable data={userList} columns={columns} renderAddNewBtn={renderAddNewBtn} emptyMessage="No user found"/>
         </div>
     );
 }

@@ -7,6 +7,7 @@ const Url = {
     roleAssign:'roleAssign',
     accessibleStoreList:'resource/stores',
     userCreate:'user/createUser',
+    attendanceList:'attendances/attendances'
 };
 
 export default Url;

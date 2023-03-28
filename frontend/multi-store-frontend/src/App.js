@@ -22,6 +22,7 @@ import "primeicons/primeicons.css";
 import RoleView from "./view/user/RoleView";
 import LoaderComponent from "./view/store/LoaderComponent";
 import UserForm from "./view/user/UserForm";
+import AttendanceList from "./view/attendance/AttendenceList";
 
 function App() {
     const [showLoginForm, setShowLoginForm] = useState(true);
@@ -53,6 +54,7 @@ function App() {
                                     <Route path='/userList' element={<UserList/>}/>
                                     <Route path='/userForm' element={<UserForm/>}/>
                                     <Route path='/userRoleView/:id' element={<RoleView/>}/>
+                                    <Route path='/attendance/:id' element={<AttendanceList/>}/>
                                 </Route>
                             </Routes>
                         </div>

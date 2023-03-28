@@ -57,7 +57,7 @@ const CustomDataTable = (props) => {
             <DataTable ref={dt} value={props.data} paginator rows={10} filters={filters}
                        tableStyle={{minWidth: '50rem'}}
                        globalFilterFields={globalFilterFields} header={renderHeader()}
-                       emptyMessage="No user found">
+                       emptyMessage={props.emptyMessage}>
                 {props.columns.map(column => renderColumn(column))}
             </DataTable>
         </div>
