@@ -129,7 +129,7 @@ const UserForm = () => {
                 <div className="form-group">
                     <label htmlFor="firstname" className="col-sm-3">Password</label>
                     <div className="col-sm-5">
-                        <input type="text" id="firstname" className="form-control"
+                        <input type="password" id="password" className="form-control"
                                onChange={(e) => setPassword(e.target.value)} value={password}/>
                     </div>
                     {passwordError && (<div className="col-sm-5 form-error-message">{passwordError}</div>)}
@@ -138,7 +138,7 @@ const UserForm = () => {
                 <div className="form-group">
                     <label htmlFor="firstname" className="col-sm-3">Repeat Password</label>
                     <div className="col-sm-5">
-                        <input type="text" id="firstname" className="form-control"
+                        <input type="password" id="repeatPassword" className="form-control"
                                onChange={(e) => setRepeatPassword(e.target.value)} value={repeatPassword}/>
                     </div>
                     {repeatPasswordError && (<div className="col-sm-5 form-error-message">{repeatPasswordError}</div>)}

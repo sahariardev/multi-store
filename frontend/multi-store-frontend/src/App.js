@@ -23,13 +23,24 @@ import RoleView from "./view/user/RoleView";
 import LoaderComponent from "./view/store/LoaderComponent";
 import UserForm from "./view/user/UserForm";
 import AttendanceList from "./view/attendance/AttendenceList";
+import {getLoggedInUserInfo} from "./Util";
+import PasswordResetView from "./view/PasswordResetView";
 
 function App() {
     const [showLoginForm, setShowLoginForm] = useState(true);
+    const [showPasswordResetForm, setShowPasswordResetForm] = useState(false);
 
     useEffect(() => {
         if (Cookies.get('token')) {
             setShowLoginForm(false);
+
+            const user = getLoggedInUserInfo();
+            if (user.passwordReset) {
+                setShowPasswordResetForm(true);
+            } else {
+                setShowPasswordResetForm(false);
+            }
+
         } else {
             setShowLoginForm(true);
         }
@@ -37,11 +48,11 @@ function App() {
 
     return (
         <div>
-            {!showLoginForm &&<BrowserRouter>
+            {!showLoginForm && !showPasswordResetForm &&<BrowserRouter>
             <Provider store={store}>
                 <section id="admin">
                     <LoaderComponent/>
-                    <Navbar/>
+                    {/*<Navbar/>*/}
                     <div className="content">
                         <Header/>
                         <div id="real">
@@ -63,6 +74,7 @@ function App() {
             </Provider>
         </BrowserRouter>}
             {showLoginForm && <LoginView/>}
+            {showPasswordResetForm && <PasswordResetView/>}
         </div>
     );
 }

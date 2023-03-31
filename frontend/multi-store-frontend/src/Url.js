@@ -7,7 +7,11 @@ const Url = {
     roleAssign:'roleAssign',
     accessibleStoreList:'resource/stores',
     userCreate:'user/createUser',
-    attendanceList:'attendances/attendances'
+    attendanceList:'attendances/attendances',
+    createAttendance:'attendances/createAttendance',
+    approveAttendance:'attendances/approveAttendance',
+    deleteAttendance:'attendances/deleteAttendance',
+    changePassword:'changePassword',
 };
 
 export default Url;

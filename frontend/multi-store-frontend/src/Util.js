@@ -22,6 +22,20 @@ export const hasRole = (role) => {
     return false;
 }
 
+export const formatDate = (date) => {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return [day, month, year].join('-');
+}
+
 export const dataTableStyles = {
     headRow: {
         style: {
@@ -95,7 +109,7 @@ export const postRequest = async (url, data, errorSetters, preProcessor, postPro
                     }
                 });
                 return {
-                    errorStatus : status
+                    errorStatus: status
                 };
             } else if (status === 200) {
                 return res;

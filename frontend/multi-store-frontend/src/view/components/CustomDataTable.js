@@ -41,10 +41,18 @@ const CustomDataTable = (props) => {
     };
 
     const renderColumn = (column) => {
+        const getSortable = () => {
+            return column.sortable ? 'sortable' : ''
+        }
+
         if (column.type === 'button') {
             return <Column body={column.body} header={column.header}/>;
         } else {
-            return <Column field={column.field} header={column.header}/>;
+            if (column.sortable) {
+                return <Column field={column.field} header={column.header} sortable/>;
+            } else {
+                return <Column field={column.field} header={column.header}/>;
+            }
         }
     }
 

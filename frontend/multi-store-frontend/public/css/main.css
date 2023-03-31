@@ -110,3 +110,16 @@ label{
 .bottom-mar-5 {
     margin-bottom:5px;
 }
+
+.p-inputtext{
+   padding-top:7px !important;
+   padding-bottom:7px !important;
+}
+
+.p-calendar {
+    width:100%;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
