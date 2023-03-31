@@ -1,6 +1,6 @@
 import validator, {ValidationFunction} from "../util/validator_util";
 import ValidationError from "../dto/validation_error";
-import {comparePasswords, hashPassword} from "../util/auth_util";
+import {comparePasswords, createJwt, hashPassword} from "../util/auth_util";
 import {Request, Response, Router} from "express";
 import prisma from "../service/db";
 
@@ -39,7 +39,8 @@ passwordChangeRouter.post('/', validator(validationPasswordChange), async (req: 
 
     if (updatedPassword) {
         res.status(200);
-        res.json({message: "Password updated successfully"});
+        let token = createJwt(updatedPassword);
+        res.json(token);
     } else {
         res.status(400);
         res.json({message: "Something went wrong. Please contact the Administrator"});

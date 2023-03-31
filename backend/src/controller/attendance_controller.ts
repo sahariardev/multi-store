@@ -137,10 +137,10 @@ attendanceRouter.post('/approveAttendance',
             return;
         }
 
-        const attendance = prisma.attendacne.update({
+        const attendance = await prisma.attendacne.update({
             where: {id: req.body.id},
             data: {
-                type: AttendanceType.APPROVED_LEAVE.toString(),
+                type: AttendanceType[AttendanceType.APPROVED_LEAVE],
                 approvedBy: {
                     connect: {
                         id: body.user.id
@@ -204,7 +204,8 @@ attendanceRouter.get('/attendances/:id', async (req: Request, res: Response) => 
 
         const attendances = await prisma.attendacne.findMany({
             where: {
-                userId: req.params.id
+                userId: req.params.id,
+                deleted: false
             },
             include: {user: true, addedBy: true, approvedBy: true, deletedBy: true}
         });
@@ -223,6 +224,11 @@ attendanceRouter.get('/attendances/:id', async (req: Request, res: Response) => 
             if (attendance.deletedBy) {
                 attendance.deletedBy.password = '';
             }
+        });
+
+        attendances.sort((a, b) => {
+            // @ts-ignore
+            return new Date(b.attendanceDate) - new Date(a.attendanceDate);
         });
 
         res.json(attendances)
