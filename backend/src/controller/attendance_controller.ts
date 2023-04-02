@@ -220,12 +220,10 @@ attendanceRouter.get('/attendances/:id', async (req: Request, res: Response) => 
 
         if (attendanceDateFrom && attendanceDateTo) {
             whereCondition.attendanceDate = {
-                gte: new Date(new Date().setHours(0, 0, 0, 0)).toISOString().split("T")[0],
-                lte: new Date(new Date(body.attendanceDateTo).setHours(0, 0, 0, 0)).toISOString().split("T")[0]
+                gte: new Date(new Date(String(attendanceDateFrom)).setHours(0, 0, 0, 0)),
+                lte: new Date(new Date(String(attendanceDateTo)).setHours(0, 0, 0, 0))
             }
         }
-
-        console.log(whereCondition);
 
         const attendances = await prisma.attendacne.findMany({
             where: whereCondition,

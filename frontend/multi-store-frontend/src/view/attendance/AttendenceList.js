@@ -94,7 +94,6 @@ const AttendanceList = () => {
 
     const fetchAttendanceData = async () => {
         dispatch(updateLoader(true));
-        console.log(getFetchUrl());
         const data = await getRequest(getFetchUrl());
         setAttendanceList(data.map(attendanceDataSerializer));
         dispatch(updateLoader(false));
@@ -247,7 +246,7 @@ const AttendanceList = () => {
             <Button type="button" icon="pi pi-sliders-h" style={{marginLeft: '10px'}} rounded
                     onClick={() => {
                         setAttendanceFilterVisible(true)
-                    }} data-pr-tooltip="Add new attendance"/>
+                    }} data-pr-tooltip="Filter"/>
         );
     }
 
