@@ -25,6 +25,7 @@ const CustomDataTable = (props) => {
 
                 <Button type="button" icon="pi pi-file" style={{marginLeft: '10px'}} rounded
                         onClick={() => exportCSV(false)} data-pr-tooltip="CSV"/>
+                {props.filterBtn && props.filterBtn()}
                 {props.renderAddNewBtn && props.renderAddNewBtn()}
             </div>
         );

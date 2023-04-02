@@ -3,7 +3,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {updatePagerHeader} from "../store/myStoreSlice";
 import {updateLoader} from "../store/commonSlice";
-import {formatDate, getLoggedInUserInfo, getRequest, postRequest} from "../../Util";
+import {formatDate, getLoggedInUserInfo, getRequest, postRequest, queryParamConcator} from "../../Util";
 import Url from "../../Url";
 import CustomDataTable from "../components/CustomDataTable";
 import {SplitButton} from "primereact/splitbutton";
@@ -12,30 +12,36 @@ import {Toolbar} from "primereact/toolbar";
 import {Dialog} from 'primereact/dialog';
 import {Calendar} from 'primereact/calendar';
 
-
 const AttendanceList = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const {id} = useParams();
+    let {id} = useParams();
+
+    const [type, setType] = useState('PRESENT');
+    const [typeError, setTypeError] = useState();
+    const [attendanceDate, setAttendanceDate] = useState();
+    const [serviceDateError, setServiceDateError] = useState();
+
+    const [attendanceFilterVisible, setAttendanceFilterVisible] = useState(false);
+    const [attendanceFilterDateFrom, setAttendanceFilterDateFrom] = useState();
+    const [attendanceFilterDateTo, setAttendanceFilterDateTo] = useState();
+    const [attendanceFilterType, setAttendanceFilterType] = useState('ALL');
+    const [attendanceFilterDeleted, setAttendanceFilterDeleted] = useState('NO');
+
+    let pageHeader = 'Users > Attendance';
+
+    if (!id) {
+        id = getLoggedInUserInfo().id;
+        pageHeader = 'Attendance'
+    }
+
     useEffect(() => {
-        dispatch(updatePagerHeader('Users > Attendance'));
+        dispatch(updatePagerHeader(pageHeader));
     });
 
     const user = getLoggedInUserInfo();
 
-    const btnItems = [
-        {
-            label: 'Lock',
-            icon: 'pi pi-times',
-            command: () => {
-
-            }
-        }
-    ];
-
-
     const [attendanceList, setAttendanceList] = useState([]);
-
 
     const attendanceDataSerializer = (data) => {
         data.attendanceDate = formatDate(new Date(data.attendanceDate));
@@ -58,15 +64,44 @@ const AttendanceList = () => {
         return data;
     }
 
-    useEffect(() => {
-        dispatch(updateLoader(true));
-        const fetchAttendanceData = async () => {
-            const data = await getRequest(Url.attendanceList + '/' + id);
-            setAttendanceList(data.map(attendanceDataSerializer));
-            dispatch(updateLoader(false));
-        };
-        fetchAttendanceData();
+    const getFetchUrl = () => {
+        let queryParams = {};
 
+        if (attendanceFilterDateFrom) {
+            queryParams.attendanceDateFrom = attendanceFilterDateFrom.toISOString();
+        }
+
+        if (attendanceFilterDateTo) {
+            queryParams.attendanceDateTo = attendanceFilterDateTo.toISOString();
+        }
+
+        if (attendanceFilterType) {
+            queryParams.attendanceDateType = attendanceFilterType;
+        }
+
+        if (attendanceFilterDeleted) {
+            queryParams.deleted = attendanceFilterDeleted === 'YES';
+        }
+
+        let url = Url.attendanceList + '/' + id;
+
+        if (queryParams) {
+            url = url + '?' + queryParamConcator(queryParams);
+        }
+
+        return url;
+    }
+
+    const fetchAttendanceData = async () => {
+        dispatch(updateLoader(true));
+        console.log(getFetchUrl());
+        const data = await getRequest(getFetchUrl());
+        setAttendanceList(data.map(attendanceDataSerializer));
+        dispatch(updateLoader(false));
+    };
+
+    useEffect(() => {
+        fetchAttendanceData();
     }, []);
 
     const deleteAttendance = async (rowData) => {
@@ -78,7 +113,7 @@ const AttendanceList = () => {
 
         if (response.id) {
             const fetchAttendanceData = async () => {
-                const data = await getRequest(Url.attendanceList + '/' + id);
+                const data = await getRequest(getFetchUrl());
                 setAttendanceList(data.map(attendanceDataSerializer));
                 dispatch(updateLoader(false));
             };
@@ -97,7 +132,7 @@ const AttendanceList = () => {
 
         if (response.id) {
             const fetchAttendanceData = async () => {
-                const data = await getRequest(Url.attendanceList + '/' + id);
+                const data = await getRequest(getFetchUrl());
                 setAttendanceList(data.map(attendanceDataSerializer));
                 dispatch(updateLoader(false));
             };
@@ -180,7 +215,6 @@ const AttendanceList = () => {
 
     ];
 
-
     const bottomToolbar = () => {
         const startContent = (
             <React.Fragment>
@@ -208,6 +242,15 @@ const AttendanceList = () => {
         );
     }
 
+    const filterBtn = () => {
+        return (
+            <Button type="button" icon="pi pi-sliders-h" style={{marginLeft: '10px'}} rounded
+                    onClick={() => {
+                        setAttendanceFilterVisible(true)
+                    }} data-pr-tooltip="Add new attendance"/>
+        );
+    }
+
     const [visible, setVisible] = useState();
     const footerContent = (
         <div>
@@ -217,12 +260,15 @@ const AttendanceList = () => {
             }} autoFocus/>
         </div>
     );
-
-    const [type, setType] = useState('PRESENT');
-    const [typeError, setTypeError] = useState();
-    const [attendanceDate, setAttendanceDate] = useState();
-    const [serviceDateError, setServiceDateError] = useState();
-
+    const footerContentForFilter = (
+        <div>
+            <Button label="Cancel" icon="pi pi-times" onClick={() => setAttendanceFilterVisible(false)} className="p-button-text"/>
+            <Button label="Filter" icon="pi pi-check" onClick={() => {
+                setAttendanceFilterVisible(false);
+                fetchAttendanceData()
+            }} autoFocus/>
+        </div>
+    );
 
     const createAttendance = async () => {
         const data = {
@@ -245,7 +291,7 @@ const AttendanceList = () => {
         if (response.id) {
             setVisible(false);
             const fetchAttendanceData = async () => {
-                const data = await getRequest(Url.attendanceList + '/' + id);
+                const data = await getRequest(getFetchUrl());
                 setAttendanceList(data.map(attendanceDataSerializer));
                 dispatch(updateLoader(false));
             };
@@ -284,8 +330,58 @@ const AttendanceList = () => {
                 </div>
             </Dialog>
 
+            <Dialog header="Filter" visible={attendanceFilterVisible} style={{width: '50vw'}}
+                    onHide={() => setAttendanceFilterVisible(false)} footer={footerContentForFilter}>
+                <div className="m-0">
+                    <div className="form-group">
+                        <label htmlFor="serviceDateFrom" className="col-sm-3">Service Date From</label>
+                        <div className="col-sm-5">
+                            <Calendar type="text" id="serviceDateFrom"
+                                      onChange={(e) => setAttendanceFilterDateFrom(e.value)}
+                                      value={attendanceFilterDateFrom}/>
+                        </div>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="serviceDateTo" className="col-sm-3">Service Date To</label>
+                        <div className="col-sm-5">
+                            <Calendar type="text" id="serviceDateFrom"
+                                      onChange={(e) => setAttendanceFilterDateTo(e.value)}
+                                      value={attendanceFilterDateTo}/>
+                        </div>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="control-demo-1" className="col-sm-3">Attendance Type</label>
+                        <div className="col-sm-5">
+                            <select className="form-control" onChange={(e) => setAttendanceFilterType(e.target.value)}
+                                    value={attendanceFilterType}>
+                                <option value="ALL">ALL</option>
+                                <option value="PRESENT">Present</option>
+                                <option value="APPROVED_LEAVE">Approved leave</option>
+                                <option value="UNAPPROVED_LEAVE">Unapproved leave</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="control-demo-1" className="col-sm-3">Select deleted</label>
+                        <div className="col-sm-5">
+                            <select className="form-control"
+                                    onChange={(e) => setAttendanceFilterDeleted(e.target.value)}
+                                    value={attendanceFilterDeleted}>
+                                <option value="YES">Yes</option>
+                                <option value="NO">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+            </Dialog>
+
             <CustomDataTable data={attendanceList} columns={columns} renderAddNewBtn={renderAddNewBtn}
                              sortField="attendanceDate"
+                             filterBtn={filterBtn}
                              emptyMessage="No attendance found"/>
             {bottomToolbar()}
         </div>

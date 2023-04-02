@@ -182,6 +182,10 @@ attendanceRouter.post('/createLeaveRequest',
 
 attendanceRouter.get('/attendances/:id', async (req: Request, res: Response) => {
         const body = req.body;
+        const attendanceDateFrom = req.query.attendanceDateFrom;
+        const attendanceDateTo = req.query.attendanceDateTo;
+        const attendanceDateType = req.query.attendanceDateType;
+        const deleted = req.query.deleted;
 
         if (req.body.userId !== req.body.user.id) {
             if (!hasRole(req, 'ATTENDANCE') && !req.body.user.storeAdmin) {
@@ -202,11 +206,29 @@ attendanceRouter.get('/attendances/:id', async (req: Request, res: Response) => 
             }
         }
 
+        let whereCondition: any = {
+            userId: req.params.id,
+        };
+
+        if (!deleted) {
+            whereCondition.deleted = false;
+        }
+
+        if (attendanceDateType != 'ALL') {
+            whereCondition.type = attendanceDateType;
+        }
+
+        if (attendanceDateFrom && attendanceDateTo) {
+            whereCondition.attendanceDate = {
+                gte: new Date(new Date().setHours(0, 0, 0, 0)).toISOString().split("T")[0],
+                lte: new Date(new Date(body.attendanceDateTo).setHours(0, 0, 0, 0)).toISOString().split("T")[0]
+            }
+        }
+
+        console.log(whereCondition);
+
         const attendances = await prisma.attendacne.findMany({
-            where: {
-                userId: req.params.id,
-                deleted: false
-            },
+            where: whereCondition,
             include: {user: true, addedBy: true, approvedBy: true, deletedBy: true}
         });
 

@@ -63,6 +63,15 @@ export const dataTableStyles = {
     },
 };
 
+export const queryParamConcator = (params) => {
+    let paramsWithKeys = [];
+    Object.keys(params).forEach(key => {
+        paramsWithKeys.push(key + '=' + params[key]);
+    });
+
+    return paramsWithKeys.join('&');
+}
+
 export const getRequest = async (url) => {
     return await fetch(getUrl(url), {
         headers: new Headers({'content-type': 'application/json', 'Authorization': 'Bearer ' + Cookies.get('token')})

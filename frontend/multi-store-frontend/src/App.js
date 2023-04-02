@@ -25,6 +25,7 @@ import UserForm from "./view/user/UserForm";
 import AttendanceList from "./view/attendance/AttendenceList";
 import {getLoggedInUserInfo} from "./Util";
 import PasswordResetView from "./view/PasswordResetView";
+import MyAttendance from "./view/attendance/MyAttendance";
 
 function App() {
     const [showLoginForm, setShowLoginForm] = useState(true);
@@ -52,7 +53,7 @@ function App() {
             <Provider store={store}>
                 <section id="admin">
                     <LoaderComponent/>
-                    {/*<Navbar/>*/}
+                    <Navbar/>
                     <div className="content">
                         <Header/>
                         <div id="real">
@@ -66,6 +67,7 @@ function App() {
                                     <Route path='/userForm' element={<UserForm/>}/>
                                     <Route path='/userRoleView/:id' element={<RoleView/>}/>
                                     <Route path='/attendance/:id' element={<AttendanceList/>}/>
+                                    <Route path='/attendance' element={<MyAttendance/>}/>
                                 </Route>
                             </Routes>
                         </div>

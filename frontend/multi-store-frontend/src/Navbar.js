@@ -37,9 +37,20 @@ const Navbar = () => {
 
         return (
             <li className="nav-item">
-                <div className={pageHeader === 'Users' ? 'nav-link active' : 'nav-link'} onClick={() => {
+                <div className={pageHeader === 'Users' || pageHeader ==='Users > Attendance' ? 'nav-link active' : 'nav-link'} onClick={() => {
                     navigateTo('Users', 'userList')
                 }}><i className="fa fa-inbox"/>Users
+                </div>
+            </li>
+        );
+    }
+
+    const getAttendanceLink = () => {
+        return (
+            <li className="nav-item">
+                <div className={pageHeader === 'Attendance' ? 'nav-link active' : 'nav-link'} onClick={() => {
+                    navigateTo('Attendance', 'attendance')
+                }}><i className="fa fa-inbox"/>Attendance
                 </div>
             </li>
         );
@@ -63,6 +74,7 @@ const Navbar = () => {
 
                     {getStoreLink()}
                     {getUserListLink()}
+                    {getAttendanceLink()}
                 </ul>
             </div>
         </div>
