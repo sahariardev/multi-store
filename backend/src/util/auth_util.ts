@@ -71,7 +71,10 @@ export const protect = (ignorePassReset: boolean = false) => {
             req.body.user = dbUser;
             req.body.accessibleStores = await prisma.store.findMany({
                 where: {
-                    id: dbUser.store.id,
+                    OR : [
+                        {id: dbUser.store.id},
+                        {parentStoreId:dbUser.store.id}
+                    ]
                 },
             });
 

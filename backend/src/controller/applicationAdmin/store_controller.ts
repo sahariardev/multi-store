@@ -29,6 +29,11 @@ const storeValidator = (req: Request, res: Response, next: NextFunction) => {
 storeRouter.post('/create', storeValidator, async (req: Request, res: Response) => {
         const body = req.body;
 
+        if (body.user.store.type != 'SYSTEM' || !body.user.superAdmin) {
+            res.status(401);
+            return;
+        }
+
         const store = await prisma.store.create({
             data: {
                 name: body.name,

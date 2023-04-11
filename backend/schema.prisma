@@ -18,6 +18,9 @@ model Store {
   city String? @db.VarChar(32)
   zip String? @db.VarChar(6)
   locked Boolean @default(false)
+  parentStoreId String?
+  parentStore Store? @relation("linkedStores", fields : [parentStoreId], references:[id])
+  linkedStores Store[] @relation("linkedStores")
 }
 
 model User {
@@ -76,3 +79,29 @@ model Attendacne {
     deletedById String?
 }
 
+model Location {
+    id String @id @default(uuid())
+    createdAt DateTime
+    updatedAt DateTime @default(now())
+    store Store @relation(fields: [storeId], references: [id])
+    storeId String
+    name String
+    description String?
+    active Boolean @default(true)
+}
+
+model Unit {
+    id String @id @default(uuid())
+    name String
+    store Store @relation(fields: [storeId], references: [id])
+    storeId String
+    active Boolean @default(true)
+}
+
+model Category {
+    id String @id @default(uuid())
+    name String
+    store Store @relation(fields: [storeId], references: [id])
+    storeId String
+    active Boolean @default(true)
+}
